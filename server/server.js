@@ -8,15 +8,14 @@ import imageRouter from "./routes/image.route.js";
 const PORT = process.env.PORT || 4000;
 
 const app = express();
-await connect();
+const corsOptions = {
+  origin: "http://localhost:5173", // Replace with your frontend URL
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization", "token"], // Add 'token' to allowed headers
+};
 
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Allow requests from your frontend
-    methods: "GET,POST",
-    allowedHeaders: "Content-Type,Authorization",
-  })
-);
+app.use(cors(corsOptions));
+await connect();
 app.use(express.json());
 
 app.get("/", (req, res) => {
