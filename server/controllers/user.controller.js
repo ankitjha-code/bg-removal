@@ -14,7 +14,7 @@ const clerkWebhooks = async (req, res) => {
     const { data, type } = req.body;
     switch (type) {
       case "user.created": {
-        const email = data?.email_addresses?.[0]?.email?.address;
+        const email = data?.email_addresses?.[0]?.email_address;
         if (!email) {
           throw new Error("Email address not found in request data");
         }
@@ -31,7 +31,7 @@ const clerkWebhooks = async (req, res) => {
         break;
       }
       case "user.updated": {
-        const email = data?.email_addresses?.[0]?.email?.address;
+        const email = data?.email_addresses?.[0]?.email_address;
         if (!email) {
           throw new Error("Email address not found in request data");
         }
