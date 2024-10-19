@@ -86,9 +86,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const createStripeSession = async (req, res) => {
   try {
-    const { clerkId, planId, customerName, customerAddress } = req.body; // Added customer details
+    const { clerkId, planId } = req.body;
     const userData = await userModel.findOne({ clerkId });
-
     if (!userData || !planId) {
       return res.json({ success: false, message: "Invalid Credentials" });
     }
@@ -145,19 +144,6 @@ const createStripeSession = async (req, res) => {
       cancel_url: `${process.env.FRONTEND_URL}/cancel`,
       metadata: {
         transactionId: newTransaction._id.toString(),
-        customerName, // Added customer name to metadata
-        customerAddress: JSON.stringify(customerAddress), // Added customer address to metadata
-      },
-      customer: {
-        name: customerName,
-        address: {
-          line1: customerAddress.line1,
-          line2: customerAddress.line2,
-          city: customerAddress.city,
-          state: customerAddress.state,
-          postal_code: customerAddress.postal_code,
-          country: customerAddress.country,
-        },
       },
     });
 

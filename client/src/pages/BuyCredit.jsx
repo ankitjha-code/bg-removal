@@ -12,29 +12,19 @@ const BuyCredit = () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
 
-  const [customerName, setCustomerName] = useState("");
-  const [customerAddress, setCustomerAddress] = useState({
-    line1: "",
-    line2: "",
-    city: "",
-    state: "",
-    postal_code: "",
-    country: "",
-  });
-
   const paymentStripe = async (planId) => {
     try {
       const token = await getToken();
       const { data } = await axios.post(
         backendUrl + "/api/user/create-stripe-session",
-        { planId, customerName, customerAddress }, // Include customer details
+        { planId },
         { headers: { token } }
       );
 
       if (data.success) {
         const stripe = window.Stripe(
           import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-        );
+        ); // Use your publishable key here
         const { error } = await stripe.redirectToCheckout({
           sessionId: data.sessionId,
         });
