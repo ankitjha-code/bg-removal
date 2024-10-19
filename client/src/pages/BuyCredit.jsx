@@ -1,8 +1,37 @@
 /* eslint-disable react/jsx-key */
-import React from "react";
+import React, { useContext } from "react";
 import { assets, plans } from "../assets/assets";
+import { AppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const BuyCredit = () => {
+  const { backendUrl, loadCreditsData } = useContext(AppContext);
+  const navigate = useNavigate();
+  const { getToken } = useAuth();
+
+  const paymentStripe = async (planId) => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.post(
+        backendUrl + "/api/user/create-stripe-session",
+        { planId },
+        { headers: { token } }
+      );
+
+      if (data.success) {
+        window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
+      } else {
+        toast.error("Payment session creation failed");
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="min-h-[78vh] text-center mb-10 pt-14">
       <button className="border border-gray-400 rounded-full mb-6 px-10 py-2">
@@ -24,7 +53,10 @@ const BuyCredit = () => {
               <span className="text-3xl font-medium">${item.price}</span>/{" "}
               {item.credits} credits
             </p>
-            <button className="w-full bg-gray-800 text-white mt-8 py-2.5 rounded-md text-sm min-w-52">
+            <button
+              onClick={() => paymentStripe(item.id)}
+              className="w-full bg-gray-800 text-white mt-8 py-2.5 rounded-md text-sm min-w-52"
+            >
               Purchase
             </button>
           </div>
