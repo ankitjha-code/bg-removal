@@ -2,6 +2,8 @@ import { Webhook } from "svix";
 import userModel from "../models/user.model.js";
 // import transactionModel from "../models/transaction.model.js";
 import Stripe from "stripe";
+import transactionModel from "../models/transcation.model.js";
+// import transactionModel from '../models/transaction.model.js'; // Ensure the path and extension are correct
 
 // http://localhost:4000/api/user/webhooks
 const clerkWebhooks = async (req, res) => {

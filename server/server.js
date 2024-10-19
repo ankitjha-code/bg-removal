@@ -10,7 +10,13 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 await connect();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow requests from your frontend
+    methods: "GET,POST",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {

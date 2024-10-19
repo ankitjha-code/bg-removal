@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Define the schema for the transaction
 const transactionSchema = new mongoose.Schema({
   clerkId: {
     type: String,
@@ -23,11 +24,14 @@ const transactionSchema = new mongoose.Schema({
   },
   date: {
     type: Number,
+    default: Date.now, // Set default value to the current date
   },
 });
 
+// Create the model using the schema
 const transactionModel =
-  mongoose.models.transaction ||
-  mongoose.model("transaction", transactionSchema);
+  mongoose.model.Transaction ||
+  mongoose.model("Transaction", transactionSchema);
 
+// Export the model
 export default transactionModel;
