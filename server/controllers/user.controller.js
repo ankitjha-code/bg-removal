@@ -182,8 +182,14 @@ const handleStripeWebhook = async (req, res) => {
           clerkId: transaction.clerkId,
         });
 
-        const creditBalance = userData.creditBalance + transaction.credits;
-        await userModel.findByIdAndUpdate(userData._id, { creditBalance });
+        // Update user's credit balance based on the purchased credits from the transaction
+        const updatedCreditBalance =
+          userData.creditBalance + transaction.credits;
+        await userModel.findByIdAndUpdate(userData._id, {
+          creditBalance: updatedCreditBalance,
+        });
+
+        // Mark transaction as paid
         await transactionModel.findByIdAndUpdate(transaction._id, {
           payment: true,
         });

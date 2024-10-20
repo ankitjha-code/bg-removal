@@ -24,12 +24,19 @@ const BuyCredit = () => {
       if (data.success) {
         const stripe = window.Stripe(
           import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-        ); // Use your publishable key here
+        );
         const { error } = await stripe.redirectToCheckout({
           sessionId: data.sessionId,
         });
 
-        if (error) {
+        if (!error) {
+          // After payment success, navigate to homepage and reload credits
+          stripe.once("checkout.session.completed", async () => {
+            // Reload credits
+            await loadCreditsData(); // Fetch updated credits from backend
+            navigate("/"); // Redirect to homepage
+          });
+        } else {
           toast.error(error.message);
         }
       } else {
